@@ -1,0 +1,29 @@
+version: '3'
+services:
+  api:
+    image: karta2341940/c2h_server:2.0
+    container_name: api_SERVER
+    restart: always
+    runtime: nvidia
+    ports:
+      - "987"
+    networks:
+      - tunnel
+  web:
+    image: karta2341940/c2h_nginx:latest
+    container_name: Proxy
+    restart: always
+    volumes:
+      - /media/hcilab/gbaian/webServerDocker/Docker/nginx.conf:/etc/nginx/nginx.conf:ro
+      - /media/hcilab/gbaian/webServerDocker/Docker/nptu-huang.github.io/Page:/usr/share/nginx/html:ro
+    links:
+      - api
+    depends_on:
+      - api
+    ports:
+      - "9000:80"
+    networks:
+      - tunnel
+networks:
+  tunnel:
+    driver: bridge
